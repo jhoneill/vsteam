@@ -12,9 +12,9 @@ namespace vsteam_lib
             if (! string.IsNullOrEmpty(s))
             {
                s = FieldCache.GetRefName(s);
-               var fieldList = FieldCache.GetCurrent();
-            
-               if (fieldList.Count() > 1 && ! fieldList.Contains(s) ) 
+               var fieldList = FieldCache.GetCurrent(false);
+
+               if (fieldList.Count() > 1 && ! fieldList.Contains(s) )
                {
                   throw (new ValidationMetadataException(s + " is not a valid Field name.") );
                }
@@ -23,7 +23,7 @@ namespace vsteam_lib
                   return s;
                }
             }
-          }  
+          }
           return InputData;
       }
    }
