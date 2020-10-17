@@ -12,7 +12,7 @@ Describe 'VSTeamWorkItemField' {
       # using the Set-VSTeamAccount function.
       Mock _getInstance { return 'https://dev.azure.com/test' }
       Mock _getApiVersion { return '1.0-unitTests' }
-      [vsteam_lib.Versions]::DefaultProject = 'Test'
+      [vsteam_lib.Versions]::Account='test'
       #Ensure that only the items returned from cache come from the mock
       [vsteam_lib.ProcessTemplateCache]::Invalidate()
       Mock Get-VSTeamProcess {
