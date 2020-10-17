@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+   <ViewDefinitions>
+      <View>
+         <Name>vsteam_lib.WorkItemPage.TableView</Name>
+         <ViewSelectedBy>
+            <TypeName>vsteam_lib.WorkItemPage</TypeName>
+         </ViewSelectedBy>
+         <TableControl>
+            <AutoSize />
+            <TableHeaders>
+               <TableColumnHeader>
+                  <Label>Label</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>Page Type</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>Locked</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>Visble</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>Inherited</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>Groups</Label>
+               </TableColumnHeader>
+            </TableHeaders>
+            <TableRowEntries>
+               <TableRowEntry>
+                  <Wrap />
+                  <TableColumnItems>
+                     <TableColumnItem>
+                        <PropertyName>label</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>pageType</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>locked</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>visible</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>inherited</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <ScriptBlock>$_.sections.groups.label -Join ', '</ScriptBlock>
+                     </TableColumnItem>
+                  </TableColumnItems>
+               </TableRowEntry>
+            </TableRowEntries>
+         </TableControl>
+      </View>
+   </ViewDefinitions>
+</Configuration>
