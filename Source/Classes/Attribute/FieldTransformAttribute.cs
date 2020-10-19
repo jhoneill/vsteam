@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
+using System.Collections;
 using System.Linq;
 namespace vsteam_lib
 {
@@ -23,8 +24,18 @@ namespace vsteam_lib
                   return s;
                }
             }
-          }
-          return InputData;
+         }
+         else if (InputData is object[])
+         {
+            ArrayList transformed = new ArrayList();
+            IEnumerable enumerable = InputData as IEnumerable;
+            foreach (var item in enumerable)
+            {
+                transformed.Add( Transform(engineIntrinsics,item) );
+            }
+            return transformed;
+         }
+         return InputData;
       }
    }
 }

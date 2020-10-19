@@ -2,9 +2,9 @@
 <Configuration>
    <ViewDefinitions>
       <View>
-         <Name>vsteam_lib.WorkItemPage.TableView</Name>
+         <Name>vsteam_lib.WorkItemControl.TableView</Name>
          <ViewSelectedBy>
-            <TypeName>vsteam_lib.WorkItemPage</TypeName>
+            <TypeName>vsteam_lib.WorkItemControl</TypeName>
          </ViewSelectedBy>
          <TableControl>
             <AutoSize />
@@ -16,19 +16,31 @@
                   <Label>PageLabel</Label>
                </TableColumnHeader>
                <TableColumnHeader>
-                  <Label>Page Type</Label>
+                  <Label>SectionID</Label>
                </TableColumnHeader>
                <TableColumnHeader>
-                  <Label>Locked</Label>
+                  <Label>GroupLabel</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>ControlLabel</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>ID</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>ControlType</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>ReadOnly</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>isContribution</Label>
                </TableColumnHeader>
                <TableColumnHeader>
                   <Label>Visble</Label>
                </TableColumnHeader>
                <TableColumnHeader>
                   <Label>Inherited</Label>
-               </TableColumnHeader>
-               <TableColumnHeader>
-                  <Label>Groups</Label>
                </TableColumnHeader>
             </TableHeaders>
             <TableRowEntries>
@@ -39,22 +51,34 @@
                         <PropertyName>WorkItemType</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <PropertyName>label</PropertyName>
+                        <PropertyName>Pagelabel</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <PropertyName>pageType</PropertyName>
+                        <PropertyName>SectionID</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <PropertyName>locked</PropertyName>
+                        <PropertyName>GroupLabel</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>Label</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>id</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>controlType</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>readOnly</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>isContribution</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
                         <PropertyName>visible</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
                         <PropertyName>inherited</PropertyName>
-                     </TableColumnItem>
-                     <TableColumnItem>
-                        <ScriptBlock>$_.sections.groups.label -Join ', '</ScriptBlock>
                      </TableColumnItem>
                   </TableColumnItems>
                </TableRowEntry>

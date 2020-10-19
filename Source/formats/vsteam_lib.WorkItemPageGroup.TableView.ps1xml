@@ -2,9 +2,9 @@
 <Configuration>
    <ViewDefinitions>
       <View>
-         <Name>vsteam_lib.WorkItemPage.TableView</Name>
+         <Name>vsteam_lib.WorkItemPageGroup.TableView</Name>
          <ViewSelectedBy>
-            <TypeName>vsteam_lib.WorkItemPage</TypeName>
+            <TypeName>vsteam_lib.WorkItemPageGroup</TypeName>
          </ViewSelectedBy>
          <TableControl>
             <AutoSize />
@@ -16,10 +16,13 @@
                   <Label>PageLabel</Label>
                </TableColumnHeader>
                <TableColumnHeader>
-                  <Label>Page Type</Label>
+                  <Label>SectionID</Label>
                </TableColumnHeader>
                <TableColumnHeader>
-                  <Label>Locked</Label>
+                  <Label>GroupLabel</Label>
+               </TableColumnHeader>
+               <TableColumnHeader>
+                  <Label>isContribution</Label>
                </TableColumnHeader>
                <TableColumnHeader>
                   <Label>Visble</Label>
@@ -28,7 +31,7 @@
                   <Label>Inherited</Label>
                </TableColumnHeader>
                <TableColumnHeader>
-                  <Label>Groups</Label>
+                  <Label>Controls</Label>
                </TableColumnHeader>
             </TableHeaders>
             <TableRowEntries>
@@ -39,13 +42,16 @@
                         <PropertyName>WorkItemType</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <PropertyName>label</PropertyName>
+                        <PropertyName>Pagelabel</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <PropertyName>pageType</PropertyName>
+                        <PropertyName>SectionID</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <PropertyName>locked</PropertyName>
+                        <PropertyName>Label</PropertyName>
+                     </TableColumnItem>
+                     <TableColumnItem>
+                        <PropertyName>isContribution</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
                         <PropertyName>visible</PropertyName>
@@ -54,7 +60,7 @@
                         <PropertyName>inherited</PropertyName>
                      </TableColumnItem>
                      <TableColumnItem>
-                        <ScriptBlock>$_.sections.groups.label -Join ', '</ScriptBlock>
+                        <ScriptBlock>($_.controls | foreach-Object {if ($_.label) {$_.label} else {$_.id}}) -join ', '</ScriptBlock>
                      </TableColumnItem>
                   </TableColumnItems>
                </TableRowEntry>

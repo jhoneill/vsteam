@@ -95,6 +95,8 @@
       "vsteam_lib.WorkItemType.ListView.ps1xml",
       "vsteam_lib.WorkitemField.TableView.ps1xml",
       "vsteam_lib.WorkItemPage.TableView.ps1xml",
+      "vsteam_lib.WorkItemPageGroup.TableView.ps1xml",
+      "vsteam_lib.WorkItemControl.TableView.ps1xml",
       "vsteam_lib.Field.TableView.ps1xml",
       "vsteam_lib.Picklist.TableView.ps1xml",
       "vsteam_lib.Wiql.TableView.ps1xml",
