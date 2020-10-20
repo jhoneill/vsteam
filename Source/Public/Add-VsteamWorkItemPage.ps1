@@ -1,5 +1,5 @@
-function Add-VsteamWorkItemPage {
-   [CmdletBinding(SupportsShouldProcess=$true)]
+function Add-VSTeamWorkItemPage {
+   [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
    param(
       [parameter(ValueFromPipelineByPropertyName=$true)]
       [vsteam_lib.ProcessTemplateValidateAttribute()]

@@ -1,4 +1,4 @@
-function Add-VsteamWorkItemPageGroup {
+function Add-VSTeamWorkItemPageGroup {
    [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
    param(
       [parameter(ValueFromPipelineByPropertyName=$true)]
@@ -29,12 +29,13 @@ function Add-VsteamWorkItemPageGroup {
    process {
       #Get the workitem type(s) we are updating. If we get a system one, make it an inherited one before changing layout.
       $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
-             Where-object {$_.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked })}
+             Where-object {$_.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked })} |
+               Unlock-VSTeamWorkItemType -Expand layout -Force:$force
       if (-not $wit) {
-         Write-Warning "Could not find an unlocked page matching '$pagelabel' for WorkItemType '$WorkItemType'."
+         Write-Warning "Could not find an unlocked page matching '$pagelabel' for a customizable WorkItemType matching '$WorkItemType'."
          return
       }
-      $wit = $wit | Unlock-VsteamWorkItemType -Force:$Force -Expand layout
+
       foreach ($w in $wit) {
          foreach ($page in $w.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked})) {
             foreach ($l in $Label) {
@@ -43,10 +44,8 @@ function Add-VsteamWorkItemPageGroup {
                   visible= $true
                }
                if ($Order) {$body['order'] = $Order}
-
                $url = $w.url + "/layout/pages/" + $page.id + "/sections/$SectionID/Groups?api-version=" + (_getApiVersion Processes)
-
-               if ($force -or $PSCmdlet.ShouldProcess("$($page.label) page " ,"Modify workitem type '$($w.name)' in process template, '$ProcessTemplate' to add group to a page.")){
+               if ($force -or $PSCmdlet.ShouldProcess("$($page.label) page of workitem '$($w.name)'" ,"Add a layout group")){
                   #Call the REST API
                   $resp = _callAPI -Url $url -method Post -body (ConvertTo-Json $body)
 
@@ -54,6 +53,7 @@ function Add-VsteamWorkItemPageGroup {
                   # and add members to make it easier if piped into something which takes values by property name
                   $resp.psobject.TypeNames.Insert(0,'vsteam_lib.WorkItemPageGroup')
                   Add-Member  -InputObject $resp -MemberType AliasProperty -Name GroupLabel      -Value Label
+                  Add-Member  -InputObject $resp -MemberType NoteProperty  -Name SectionID       -Value $SectionID
                   Add-Member  -InputObject $resp -MemberType NoteProperty  -Name PageLabel       -Value $page.label
                   Add-Member  -InputObject $resp -MemberType NoteProperty  -Name WorkItemType    -Value $w.name
                   Add-Member  -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -Value $ProcessTemplate

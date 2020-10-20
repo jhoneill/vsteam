@@ -5,6 +5,7 @@ Describe 'VSTeamWorkItemField' {
       . "$PSScriptRoot\_testInitialize.ps1" $PSCommandPath
       . "$PSScriptRoot\..\..\..\Source\Public\Get-VSTeamProcess.ps1"
       . "$PSScriptRoot\..\..\..\Source\Public\Get-VSTeamWorkItemType.ps1"
+      . "$PSScriptRoot\..\..\..\Source\Public\Unlock-VSTeamWorkItemType.ps1"
       . "$PSScriptRoot\..\..\..\Source\Public\Get-VSTeamField.ps1"
 
       ## Arrange

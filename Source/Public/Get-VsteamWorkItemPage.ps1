@@ -1,4 +1,4 @@
-function Get-VsteamWorkItemPage {
+function Get-VSTeamWorkItemPage {
    [CmdletBinding()]
    param(
       [parameter(ValueFromPipelineByPropertyName=$true)]

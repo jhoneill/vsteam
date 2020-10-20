@@ -1,5 +1,14 @@
 # Changelog
-## J.H. O'Neill @ 15th October 2020
+#J.H. O'Neill @ 20th October 2020
+1.   ** Added classes** to support tab completion of WorkItem \[layout\]  pages and pagegroups
+      * `PageCompleter`       in Source/Classes/Completer/PageCompleter.cs
+      * `PageGroupCompleter`  in Source/Classes/Completer/PageGroupCompleter.cs
+2.   **Added Functions**  `Add-VsteamWorkItemPage`  ,   `Get-VsteamWorkItemPage`, `Remove-VsteamWorkItemPage, `Set-VsteamWorkItemPage` to work with the pages in WorkItem Layouts
+3.   **Added Functions**  `Add-VsteamWorkItemPageGroup`, `Remove-VsteamWorkItemPageGroup`, `Set-VsteamWorkItemPageGroup` to work with groups of controls on these pages.
+4    **Added Functions**  `Add-VsteamWorkItemControl`, `Remove-VsteamWorkItemControl`  `Set-VsteamWorkItemControl` to work with the controls.
+
+# Changelog
+## J.H. O'Neill @ 15th October 2020 (#370)
 1.   ** Added classes** to support tab completion of Fields and Picklists in the following functions. Classes are:
      *  `FieldTransformAttribute` in file Source/Classes/Attribute/FieldTransformAttribute.cs,
      *  `PickListTransformAttribute` in   Source/Classes/Attribute/PickListTransformAttribute.cs,

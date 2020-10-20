@@ -1,5 +1,5 @@
-function Remove-VsteamWorkItemPage {
-   [CmdletBinding(SupportsShouldProcess=$true)]
+function Remove-VSTeamWorkItemPage {
+   [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
    param(
       [parameter(ValueFromPipelineByPropertyName=$true)]
       [vsteam_lib.ProcessTemplateValidateAttribute()]
@@ -10,28 +10,31 @@ function Remove-VsteamWorkItemPage {
       [ArgumentCompleter([vsteam_lib.WorkItemTypeCompleter])]
       $WorkItemType,
 
-      [parameter(Mandatory = $true, Position=1)]
+      [Parameter(ValueFromPipelineByPropertyName=$true)]
+      [ArgumentCompleter([vsteam_lib.PageCompleter])]
       [Alias('Name','PageLabel')]
+
       $Label,
 
-      [switch]
-      $Force
+      [switch]$Force
    )
    process {
-      #This is designed to allow multiple pages to be added, and/or multiple WorkItemTypes to be modifed
-      if ($Label.count -gt 1 -and ($order -or $Sections)) {throw "Can't process multiple pages when Order and/or sections are specified."  ; return}
-         #Get the workitem type(s) we are updating. If we get a system one, make it an inherited one first before adding the page.
-         $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType  $WorkItemType
-         foreach ($w in $wit) {
-            if ($w.customization -eq 'system') {
-## throw an error. You can't hide remove system pages
-            }
-            $url= $w.url + "/layout/pages?api-version=" + (_getApiVersion Processes)
-            foreach ($l in $Label) {
+      #Get the workitem type(s) we are updating.
+      $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
+             Where-object {$_.layout.pages.where({$_.label -like $Label -and -not $_.psobject.properties['inherited'] })}
+      if (-not $wit) {
+         Write-Warning "Could not find a Custom page matching '$Label' for WorkItemType '$WorkItemType'."
+         return
+      }
 
-##  DELETE https://dev.azure.com/{organization}/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/pages/{pageId}?api-version=5.1-preview.1
-
+      foreach ($w in $wit) {
+         foreach ($page in $w.layout.pages.where({$_.label -like $Label})) {
+            $url= $w.url + "/layout/pages/" + $page.id +" ?api-version=" + (_getApiVersion Processes)
+            if ($Force -or $PSCmdlet.ShouldProcess("$($page.Label)`" page of WorkItem type `"$($w.name)",'Delete Page')) {
+               #Call the REST API
+               $null = _callAPI -method Delete -Url $url
             }
-}   }
+         }
+      }
+   }
 }
-

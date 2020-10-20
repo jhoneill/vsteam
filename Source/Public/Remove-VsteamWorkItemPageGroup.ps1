@@ -1,5 +1,5 @@
-function Remove-VsteamWorkItemPageGroup {
-   [CmdletBinding()]
+function Remove-VSTeamWorkItemPageGroup {
+   [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
    param(
       [parameter(ValueFromPipelineByPropertyName=$true)]
       [vsteam_lib.ProcessTemplateValidateAttribute()]
@@ -16,40 +16,41 @@ function Remove-VsteamWorkItemPageGroup {
 
       [parameter(Mandatory = $true, Position=1)]
       [Alias('Name','GroupLabel')]
-      $Label,
+      [string]$Label,
 
-      [Parameter(ValueFromPipelineByPropertyName=$true)]
-      [ValidateSet('Section1','Section2','Section3','Section4')]
-      $SectionID = 'Section1'
+      [switch]$Force
    )
    process {
-      #Get the workitem type(s) we are updating. If we get a system one, make it an inherited one before changing layout.
-      $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType
+      #Get the workitem type(s) we are updating. We can only remove a custom group so we don't need to worry about system w.i.ts
+      $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
+             Where-object {$_.layout.pages.where({
+                  $_.label -like $PageLabel -and -not $_.locked -and
+                  $_.sections.groups.label -like $Label})}
+      if (-not $wit) {
+         Write-Warning "Could not find an unlocked page matching '$pagelabel' with group matching '$Label' for WorkItemType '$WorkItemType'."
+         return
+      }
       foreach ($w in $wit) {
-         if ($w.customization -eq 'system') {
-            $url  = ($w.url -replace '/workItemTypes/.*$', '/workItemTypes?api-version=') +  (_getApiVersion Processes)
-            $body = @{
-               color        = $w.color
-               description  = $w.description
-               icon         = $w.icon
-               inheritsFrom = $w.referenceName
-               isDisabled   = $w.isDisabled
-               name         = $w.name
+         foreach ($page in $w.layout.pages.where({
+            $_.label -like $PageLabel -and -not $_.locked -and
+            $_.sections.groups.label -like $Label}))
+         {
+            $section = $page.sections.where({$_.groups.label -like $Label})
+            $group  = $section.groups.where({$_.label -like $Label})
+            if ($group.Count -gt 1) {
+               Write-Warning "'$Label' is not unique on Page '$($page.label)' for WorkItem type '$($w.name)'."
+               continue
             }
-            $w    = _callAPI -method Post -Url $url -body (ConvertTo-Json $body)
-         }
-         foreach ($l in $Label) {
-            $page = Get-VsteamWorkItemPage -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Label $PageLabel
-            $url  = $page.url + "/sections/$SectionID/Groups?api-version=" + (_getApiVersion Processes)
-            $body = @{label=$l; visible=$true}
-            $resp = _callAPI -Url $url -method Post -body (ConvertTo-Json $body)
-            $resp.psobject.TypeNames.Insert(0,'Team.WorkitemPageGroup')
-            Add-Member  -InputObject $resp -MemberType AliasProperty -Name GroupLabel      -Value Label
-            Add-Member  -InputObject $resp -MemberType NoteProperty  -Name PageLabel       -Value $PageLabel
-            Add-Member  -InputObject $resp -MemberType NoteProperty  -Name WorkItemType    -Value $WorkItemType
-            Add-Member  -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -Value $ProcessTemplate
-
-            Write-Output $resp
+            if ($group.psobject.properties['inherited']) {
+               Write-Warning "'$($group.name)' is inherited and cannot be removed (but may be hidden)."
+               continue
+            }
+            $url = '{0}/layout/pages/{1}/sections/{2}/Groups/{3}?api-version={4}' -f
+                     $w.url,  $page.id, $section.id, $group.id, (_getApiVersion Processes)
+            if ($force -or $PSCmdlet.ShouldProcess("$($group.label)`" group on Page `"$($page.label)" ,"Delete group from layout")){
+               #Call the REST API
+               $null = _callAPI -Url $url -method Delete
+            }
          }
       }
    }
