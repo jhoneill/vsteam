@@ -4,13 +4,14 @@ function Unlock-VSTeamWorkItemType {
       [Parameter(Position=0,ValueFromPipeline=$true,Mandatory=$true)]
       $WorkItemType,
 
+      [AllowNull()]
       [ValidateSet('behaviors','layout','states')]
       [string[]]$Expand,
 
       [switch]$Force
    )
    process {
-      if ($WorkItemType.customization -ne 'system') {
+      if (-not ($WorkItemType.psobject.properties["customization"] -and $WorkItemType.customization -eq 'system')) {
          return $WorkItemType
       }
       else {
@@ -24,8 +25,18 @@ function Unlock-VSTeamWorkItemType {
             name         = $WorkItemType.name
          }
          if ($force -or $PSCmdlet.ShouldProcess($WorkItemType.name,"Update WorkItemType")) {
-            $null = _callAPI -Url $url -method Post -body (ConvertTo-Json $body)
-            Get-VSTeamWorkItemType -ProcessTemplate $WorkItemType.ProcessTemplate -WorkItemType $WorkItemType.name -Expand:$Expand
+            $resp = _callAPI -Url $url -method Post -body (ConvertTo-Json $body)
+            if ($expand) {Get-VSTeamWorkItemType -ProcessTemplate $WorkItemType.ProcessTemplate -WorkItemType $WorkItemType.name -Expand $Expand}
+            else         {
+               # Apply a Type Name so we can use custom format view and/or custom type extensions
+               #  add members to help piping into other functions
+               _applyTypesWorkItemType -item $resp
+               Add-Member -InputObject $resp -MemberType AliasProperty -Name "WorkItemType"    -Value "name"
+               if ($WorkItemType.psobject.properties["ProcessTemplate"]) {
+                  Add-Member -InputObject $resp -MemberType NoteProperty  -Name "ProcessTemplate" -Value $WorkItemType.ProcessTemplate
+               }
+               return $resp
+            }
          }
       }
    }
