@@ -79,20 +79,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ProcessTemplate
-Specifies the Process Template holding the WorkItem type to be extended. Note that the built-in Templates do not allow their WorkItem types to be modified so this must be a custom Template. If no Template is specified, the Process of the current Project is used as a default.
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
+<!-- #include "./params/processTemplate.md" -->
 
 ### -ReadOnly
 Specifies that the field cannot be edited.
@@ -138,21 +125,7 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-
-### -WorkItemType
-The WorkItem type(s) to which the Field should be added. These may be custom Types, or system-defined Types inherited by a custom Process Template.
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
-```
+<!-- #include "./params/workItemType.md" -->
 
 ## INPUTS
 
