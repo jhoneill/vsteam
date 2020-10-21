@@ -12,4 +12,3 @@ Default value: None
 Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
-The name of the work item type to be modified.
