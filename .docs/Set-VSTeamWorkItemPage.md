@@ -3,46 +3,46 @@
 # Set-VSTeamWorkItemPage
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
 
-## SYNTAX
-
-### Both
-```
-Set-VSTeamWorkItemPage [-ProcessTemplate <Object>] [-WorkItemType] <Object> [-Label <Object>]
- -Newlabel <String> -Order <Int32> [-Sections <Object>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### Label
-```
-Set-VSTeamWorkItemPage [-ProcessTemplate <Object>] [-WorkItemType] <Object> [-Label <Object>]
- -Newlabel <String> [-Sections <Object>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### Order
-```
-Set-VSTeamWorkItemPage [-ProcessTemplate <Object>] [-WorkItemType] <Object> [-Label <Object>] -Order <Int32>
- [-Sections <Object>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
+<!-- #include "./synopsis/Set-VSTeamWorkItemType.md" -->
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Each type of WorkItem specifies a multipage layout. This command moves and rennames pages on layouts. Note that the built-in Process templates (Scrum, Agile etc.) do not allow their work item types to be customized, this is only allowed for custom processes.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+ Set-VSTeamWorkItemPage -ProcessTemplate scrum5 -WorkItemType Task -PageLabel Progress -Order 0 -Force
+
+WorkItemType PageLabel Page Type Locked Visble Inherited Groups
+------------ --------- --------- ------ ------ --------- ------
+Task         Progress  custom           True
 ```
 
-{{ Add example description here }}
+This command moves "progress" page to be the leftmost page on the form, for Tasks om the Scrum5 template.
+
+### Example 2
+```powershell
+ Get-VsteamWorkItemPage -ProcessTemplate scrum5 -WorkItemType * -PageLabel "Business Justification" | Set-VSTeamWorkItemPage -Newlabel "Reason" -Force
+
+WorkItemType PageLabel Page Type Locked Visble Inherited Groups
+------------ --------- --------- ------ ------ --------- ------
+Feature      Reason    custom           True
+Epic         Reason    custom           True
+```
+
+"Business Justification" is a long label and it has been decided to shorten it to "Reason"
+The first command in the pipeline finds all the pages with that label, in any WorkItem type in the Scrum 5 template, and sends them to Set-VSTeamWorkItemPage which assigns a new label, using -Force to avoid the confirmation message.
+This is used to show piped input but the same goal could be acheived with the following:
+Set-VSTeamWorkItemPage -ProcessTemplate scrum5  *  "Business Justification"  -Newlabel "Reason" -Force
 
 ## PARAMETERS
 
 <!-- #include "./params/forcegroup.md" -->
 
 ### -Label
-{{ Fill Label Description }}
+The Current name of the page.
 
 ```yaml
 Type: Object
@@ -57,7 +57,7 @@ Accept wildcard characters: False
 ```
 
 ### -Newlabel
-{{ Fill Newlabel Description }}
+A replacement label for the page. If not specified the name remains as it is. Note that either NewLabel or order (or both) must be specified.
 
 ```yaml
 Type: String
@@ -72,7 +72,7 @@ Accept wildcard characters: False
 ```
 
 ### -Order
-{{ Fill Order Description }}
+Repositions the page. 0 is before the first existing page, 1 after the first and so on. Note that either NewLabel or order (or both) must be specified.
 
 ```yaml
 Type: Int32
@@ -87,21 +87,6 @@ Accept wildcard characters: False
 ```
 
 <!-- #include "./params/processTemplate.md" -->
-### -Sections
-{{ Fill Sections Description }}
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 
 <!-- #include "./params/workItemType.md" -->
 
@@ -112,3 +97,8 @@ Accept wildcard characters: False
 ## NOTES
 
 ## RELATED LINKS
+[Add-VSTeamWorkItemPage](Add-VSTeamWorkItemPage.md)
+
+[Get-VSTeamWorkItemType](Get-VSTeamWorkItemPage.md)
+
+[Remove-VSTeamWorkItemPage](Remove-VSTeamWorkItemPage.md)

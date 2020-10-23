@@ -1,0 +1,1 @@
+Returns pages in the layout for a WorkItem type. Pages contain groups and controls

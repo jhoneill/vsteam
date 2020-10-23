@@ -10,6 +10,7 @@ function Add-VSTeamWorkItemPage {
       [ArgumentCompleter([vsteam_lib.WorkItemTypeCompleter])]
       $WorkItemType,
 
+      [ArgumentCompleter([vsteam_lib.PageCompleter])]
       [parameter(Mandatory = $true, Position=1)]
       [Alias('Name','PageLabel')]
       $Label,
@@ -41,8 +42,15 @@ function Add-VSTeamWorkItemPage {
 
                if ($Force -or $PSCmdlet.ShouldProcess($w.name,"Modify process template '$ProcessTemplate'. Add page to work item")) {
                   #call the REST API
-                  $resp = _callAPI -method Post -Url $url -body (ConvertTo-Json $body)
-
+                  try {
+                     $resp = _callAPI -method Post -Url $url -body (ConvertTo-Json $body)
+                  }
+                  catch {
+                     $msg = "'Failed to add page '{0}' to WorkItem type '{1}' in {2}." -f
+                           $l, $w.name, $ProcessTemplate
+                     Write-Error -Activity Add-VSTeamWorkItemPage  -Category InvalidResult -Message $msg
+                     continue
+                  }
                   # Apply a Type Name so we can use custom format view and/or custom type extensions
                   # and add members to make it easier if piped into something which takes values by property name
                   $resp.psobject.TypeNames.Insert(0,'vsteam_lib.Workitempage')

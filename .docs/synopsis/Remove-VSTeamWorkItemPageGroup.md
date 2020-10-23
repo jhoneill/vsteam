@@ -1,0 +1,1 @@
+Removes groups from page layouts of WorkItem types.

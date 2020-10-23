@@ -20,6 +20,7 @@ function Remove-VSTeamWorkItemControl {
 
       [parameter(Mandatory = $true)]
       [ArgumentCompleter([vsteam_lib.FieldCompleter])]
+      [alias('ReferenceName')]
       [string]$Label,
 
       [switch]$Force
@@ -35,13 +36,15 @@ function Remove-VSTeamWorkItemControl {
                   $_.label-like $PageLabel -and
                   -not $_.locked -and
                   $_.sections.groups.where({
-                        $_.label -like $GroupLabel -and
-                       ($_.controls.label -like $Label -or $_.controls.id -like $Label)
+                        $_.label -like $GroupLabel -and $_.controls.where({
+                           -not $_.psobject.properties['inherited'] -and
+                            ($_.label -like $Label -or $_.id -like $Label)
+                           })
                   })
                 })}
 
       if (-not $wit) {
-         Write-Warning "No suitable unlocked page matching '$pagelabel' for customizable WorkItem Type matching '$WorkItemType.'"
+         Write-Warning "No WorkItem type matching '$WorkItemType' in $ProcessTemplate met the criteria to remove a control."
          return
       }
 
@@ -51,16 +54,28 @@ function Remove-VSTeamWorkItemControl {
                   $_.label -like $PageLabel -and
                   -not $_.locked -and
                   $_.sections.groups.where({
-                        $_.label -like $GroupLabel -and
-                       ($_.controls.label -like $Label -or $_.controls.id -like $Label)
+                       $_.label -like $GroupLabel -and $_.controls.where({
+                           -not $_.psobject.properties['inherited'] -and
+                            ($_.label -like $Label -or $_.id -like $Label)
+                        })
                   })
          })
 
          foreach ($page in $Pages) {
-            $group   = $page.sections.groups.Where({$_.label -like $GroupLabel -and $_.controls.where({$_.label -like $Label -or $_.id -like $Label})})
-            $control = $group.controls.where({$_.label -like $Label -or $_.id -like $Label})
+            $group   = $page.sections.groups.Where({
+                  $_.label -like $GroupLabel -and $_.controls.where({
+                     -not $_.psobject.properties['inherited'] -and
+                     ($_.label -like $Label -or $_.id -like $Label)
+                  })
+            })
+            $control = $group.controls.where({
+               -not $_.psobject.properties['inherited'] -and
+               ($_.label -like $Label -or $_.id -like $Label)
+            })
             if ($control.count -gt 1) {
-               Write-Warning "'$label' is not unique on Page '$($page.label)' for WorkItem type '$($w.name)'."
+               $msg = "'{0}' is not a unique control on Page '{1}' for WorkItem type '{2}' in {3}." -f
+                      $Label, $page.label, $w.name, $ProcessTemplate
+               Write-Error -Activity Add-VSTeamWorkItemControl  -Category InvalidData -Message $msg
                continue
             }
 
@@ -68,7 +83,15 @@ function Remove-VSTeamWorkItemControl {
             $w.url , $group.ID  , $control.id ,  (_getApiVersion Processes)
             if ($force -or $PSCmdlet.ShouldProcess("$($control.label)`" on page `"$($page.label)","On workitem type $($w.name) Delete field.")) {
                #Call the REST API
-               $null = _callAPI  -method Delete -Url $url
+               try {
+                  $null = _callAPI  -method Delete -Url $url
+               }
+               catch {
+                  $msg = "Failed to remove control {0} from Page '{1}' from WorkItem type '{2}' in {3}." -f
+                          $control.label, $page.label, $w.name , $ProcessTemplate
+                  Write-error -Activity Remove-VSTeamWorkItemControl  -Category InvalidResult -Message $msg
+                  continue
+               }
             }
          }
       }

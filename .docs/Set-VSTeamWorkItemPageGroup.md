@@ -3,47 +3,46 @@
 # Set-VSTeamWorkItemPageGroup
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
 
-## SYNTAX
-
-### LeaveAlone (Default)
-```
-Set-VSTeamWorkItemPageGroup [-ProcessTemplate <Object>] [-WorkItemType] <Object> [-PageLabel <String>]
- [-Label] <String> [-Order <Int32>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### Rename
-```
-Set-VSTeamWorkItemPageGroup [-ProcessTemplate <Object>] [-WorkItemType] <Object> [-PageLabel <String>]
- [-Label] <String> [-Order <Int32>] [-NewLabel] <String> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### Move
-```
-Set-VSTeamWorkItemPageGroup [-ProcessTemplate <Object>] [-WorkItemType] <Object> [-PageLabel <String>]
- [-Label] <String> [-Order <Int32>] [-NewPage <String>] [-NewSectionID <Object>] [-Force] [-WhatIf] [-Confirm]
- [<CommonParameters>]
-```
+<!-- #include "./synopsis/Set-VSTeamWorkItemPageGroup.md" -->
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+This command modifies groups on the pages of WorkItem layouts. It allows the groups to be renamed, repositioned within their sections, moved to another section or moved to another page. 
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+ Set-VSTeamWorkItemPageGroup -WorkItemType Task -ProcessTemplate Scrum5 -PageLabel Details -Label Followup-Order 0  -NewLabel "Follow-up" -Force
+
+
+WorkItemType PageLabel SectionID GroupLabel isContribution Visble Inherited Controls
+------------ --------- --------- ---------- -------------- ------ --------- --------
+Task         Details   Section1  Follow-up   False          True
+```
+In the help for Add-VSTeamWorkItemPageGroup a group named "followup" was added to the details page of the Task WorkItem Type in the Scrum5 process template. Because no position was given it was placed as the last group in Section1. This moves it to be the first group in theat section, and inserts a "-" in the label
+
+
+### Example 2
+```powershell
+Get-VSTeamProcess scrum? | Get-VSTeamWorkItemPage -Label ReportInformation | Set-VSTeamWorkItemPageGroup -Label Environment  -NewPage details -NewSectionID Section1 -Force
+
+
+WorkItemType PageLabel SectionID GroupLabel  isContribution Visble Inherited Controls
+------------ --------- --------- ----------  -------------- ------ --------- --------
+Bug          Details   Section1  Environment False          True
+Bug          Details   Section1  Environment False          True
+Bug          Details   Section1  Environment False          True
 ```
 
-{{ Add example description here }}
+In the help for Add-VSTeamWorkItemPageGroup a pipeline was shown finding pages labeled "ReportInformation" in any work item in the scrum templates. Here those items are modified moving them from their current place on the "ReportInformation" to the 
 
 ## PARAMETERS
 
 <!-- #include "./params/forcegroup.md" -->
 
 ### -Label
-{{ Fill Label Description }}
+The current name of the group. 
 
 ```yaml
 Type: String
@@ -58,7 +57,7 @@ Accept wildcard characters: False
 ```
 
 ### -NewLabel
-{{ Fill NewLabel Description }}
+The new label for the group 
 
 ```yaml
 Type: String
@@ -73,7 +72,7 @@ Accept wildcard characters: False
 ```
 
 ### -NewPage
-{{ Fill NewPage Description }}
+A new page to move the group to. 
 
 ```yaml
 Type: String
@@ -88,13 +87,13 @@ Accept wildcard characters: False
 ```
 
 ### -NewSectionID
-{{ Fill NewSectionID Description }}
+A new section to move the group to
 
 ```yaml
 Type: Object
 Parameter Sets: Move
 Aliases:
-Accepted values: Section1, Section2, Section3, Section4
+Accepted values: Section1, Section2, Section3
 
 Required: False
 Position: Named
@@ -104,7 +103,7 @@ Accept wildcard characters: False
 ```
 
 ### -Order
-{{ Fill Order Description }}
+A new position for new group; 0 is before the first existing group, 1 is between the first and second, and so on. If not specified a new group will be added as the last group in its section. 
 
 ```yaml
 Type: Int32
@@ -119,7 +118,7 @@ Accept wildcard characters: False
 ```
 
 ### -PageLabel
-{{ Fill PageLabel Description }}
+The page where the group is currently found.
 
 ```yaml
 Type: String
@@ -144,3 +143,6 @@ Accept wildcard characters: False
 ## NOTES
 
 ## RELATED LINKS
+[Add-VSTeamWorkItemPageGroup](Add-VSTeamWorkItemPageGroup.md)
+
+[Remove-VSTeamWorkItemPageGroup](Remove-VSTeamWorkItemPageGroup.md)

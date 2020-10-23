@@ -3,33 +3,36 @@
 # Remove-VSTeamWorkItemControl
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
-
-## SYNTAX
-
-```
-Remove-VSTeamWorkItemControl -ProcessTemplate <Object> -WorkItemType <Object> [-PageLabel <String>]
- [-GroupLabel <String>] -Label <String> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
+<!-- #include "./synopsis/Remove-VSTeamWorkItemControl.md" -->
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+Removes a control for a WorkItem data field from a WorkItem type's page layout definition; inherited controls cannot be removed (although they can be hidden), and if the control selected is an inherited one the command may respond that there are no Workitem types suitable for processing. Removing a control from the page does not delete that field as a database column for the work item type. 
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+Remove-VSTeamWorkItemControl -ProcessTemplate Scrum5 -WorkItemType Epic -Page Details  -Label effort
+
+WARNING: No WorkItem type matching 'Epic' in Scrum5 met the criteria to remove a control.
 ```
 
-{{ Add example description here }}
+In this example the command has tried to remove an inherited field, but couldn't find a match for WorkItem of "Epic", an unlocked page Named "Details", and a removable control labeled effort in any group. 
+
+### Example 2
+```powershell
+Remove-VSTeamWorkItemControl -ProcessTemplate Scrum5 -WorkItemType Epic -Page Details  -Label Office
+```
+
+In this example the command has found a custom field by searching in all groups on the "Details" page for Epic workItems
 
 ## PARAMETERS
 
 <!-- #include "./params/forcegroup.md" -->
 
 ### -GroupLabel
-{{ Fill GroupLabel Description }}
+Specifies a group to search for the the control. The group label can be a wildcard, and if no group is given all groups will be searched. 
 
 ```yaml
 Type: String
@@ -44,7 +47,7 @@ Accept wildcard characters: False
 ```
 
 ### -Label
-{{ Fill Label Description }}
+The display label for the control or the reference name for the data-field. This can be a wild card, provided that only one control on a page matches the combination of specified group and control label. 
 
 ```yaml
 Type: String
@@ -59,7 +62,7 @@ Accept wildcard characters: False
 ```
 
 ### -PageLabel
-{{ Fill PageLabel Description }}
+The page to search for the control. If not specified all pages will be searched. 
 
 ```yaml
 Type: String
@@ -84,3 +87,9 @@ Accept wildcard characters: False
 ## NOTES
 
 ## RELATED LINKS
+
+[Add-VSTeamWorkItemControl](Add-VSTeamWorkItemControl.md)
+
+[Set-VSTeamWorkItemControl](Set-VSTeamWorkItemControl.md)
+
+[Remove-VSTeamWorkItemPageGroup](Remove-VSTeamWorkItemPageGroup.md)

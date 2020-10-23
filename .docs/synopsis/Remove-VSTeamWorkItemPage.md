@@ -1,0 +1,1 @@
+Removes pages from the layouts of WorkItem types.

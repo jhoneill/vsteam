@@ -6,18 +6,19 @@ function Get-VSTeamWorkItemPage {
       [ArgumentCompleter([vsteam_lib.ProcessTemplateCompleter])]
       $ProcessTemplate = $env:TEAM_PROCESS,
 
-      [parameter(Mandatory = $true,ValueFromPipelineByPropertyName=$true)]
+      [parameter(ValueFromPipelineByPropertyName=$true,Position=0)]
       [ArgumentCompleter([vsteam_lib.WorkItemTypeCompleter])]
-      $WorkItemType,
+      $WorkItemType = "*",
 
+      [parameter(ValueFromPipelineByPropertyName=$true,Position=1)]
       [ArgumentCompleter([vsteam_lib.PageCompleter])]
       [Alias('Name','PageLabel')]
-      [string]$Label = '*'
+      $Label = '*'
    )
    process {
       $wit = (Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout)
       foreach ($w in $wit) {
-         foreach ($p in $w.layout.pages.where({$_.label -like $Label})) {
+         foreach ($p in $w.layout.pages.where(({foreach ($l in $label ) {if ($_.label -like $l -and -not $_.locked) {$true }}}))) {
             # Apply Type Names to page and its child items so we can use custom format view and/or custom type extensions
             # and add members to make it easier if piped into something which takes values by property name
             $p.psobject.TypeNames.Insert(0,'vsteam_lib.WorkItemPage')

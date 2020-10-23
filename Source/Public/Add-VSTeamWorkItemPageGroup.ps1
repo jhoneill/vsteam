@@ -19,7 +19,7 @@ function Add-VSTeamWorkItemPageGroup {
       $Label,
 
       [Parameter(ValueFromPipelineByPropertyName=$true)]
-      [ValidateSet('Section1','Section2','Section3','Section4')]
+      [ValidateSet('Section1','Section2','Section3')]
       $SectionID = 'Section1',
 
       [int]$Order,
@@ -32,7 +32,7 @@ function Add-VSTeamWorkItemPageGroup {
              Where-object {$_.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked })} |
                Unlock-VSTeamWorkItemType -Expand layout -Force:$force
       if (-not $wit) {
-         Write-Warning "Could not find an unlocked page matching '$pagelabel' for a customizable WorkItemType matching '$WorkItemType'."
+          Write-Warning "No WorkItem type matching '$WorkItemType' in $ProcessTemplate met the criteria to add a PageGroup."
          return
       }
 
@@ -46,9 +46,17 @@ function Add-VSTeamWorkItemPageGroup {
                if ($Order) {$body['order'] = $Order}
                $url = $w.url + "/layout/pages/" + $page.id + "/sections/$SectionID/Groups?api-version=" + (_getApiVersion Processes)
                if ($force -or $PSCmdlet.ShouldProcess("$($page.label) page of workitem '$($w.name)'" ,"Add a layout group")){
-                  #Call the REST API
-                  $resp = _callAPI -Url $url -method Post -body (ConvertTo-Json $body)
-
+                  #Call the REST API.
+                  try {
+                     $resp = _callAPI -Url $url -method Post -body (ConvertTo-Json $body)
+                  }
+                  catch {
+                     #Make this a Non-terminating error, so a long list doesn't stop half way.
+                     $msg = "An error occured trying to add group '{0}' to page '{1}' of workitem type '{2}' in ProcessTemplate {3}." -f
+                                 $l, $Page.label, $w.name, $ProcessTemplate
+                     Write-Error -Activity Add-VSTeamWorkItemPageGroup  -Category InvalidResult -Message $msg
+                     continue
+                  }
                   # Apply a Type Name so we can use custom format view and custom type extensions
                   # and add members to make it easier if piped into something which takes values by property name
                   $resp.psobject.TypeNames.Insert(0,'vsteam_lib.WorkItemPageGroup')

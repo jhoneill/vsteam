@@ -1,0 +1,1 @@
+Adds pages to the layouts of WorkItem types. Pages contain groups and controls

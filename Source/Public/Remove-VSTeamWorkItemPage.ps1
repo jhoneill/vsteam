@@ -23,7 +23,7 @@ function Remove-VSTeamWorkItemPage {
       $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
              Where-object {$_.layout.pages.where({$_.label -like $Label -and -not $_.psobject.properties['inherited'] })}
       if (-not $wit) {
-         Write-Warning "Could not find a Custom page matching '$Label' for WorkItemType '$WorkItemType'."
+         Write-Warning "No WorkItem type matching '$WorkItemType' in $ProcessTemplate met the criteria to remove a page."
          return
       }
 
@@ -32,7 +32,15 @@ function Remove-VSTeamWorkItemPage {
             $url= $w.url + "/layout/pages/" + $page.id +" ?api-version=" + (_getApiVersion Processes)
             if ($Force -or $PSCmdlet.ShouldProcess("$($page.Label)`" page of WorkItem type `"$($w.name)",'Delete Page')) {
                #Call the REST API
-               $null = _callAPI -method Delete -Url $url
+               try {
+                  $null = _callAPI -method Delete -Url $url
+               }
+               catch {
+                  $msg = "Failed to remove Page '{0}' from WorkItem type '{1}' in {2}." -f
+                                 $page.label, $w.name , $ProcessTemplate
+                  Write-error -Activity Remove-VSTeamWorkItemPage  -Category InvalidResult -Message $msg
+                  continue
+               }
             }
          }
       }
