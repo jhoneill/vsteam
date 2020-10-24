@@ -25,16 +25,17 @@ function Unlock-VSTeamWorkItemType {
             name         = $WorkItemType.name
          }
          if ($force -or $PSCmdlet.ShouldProcess($WorkItemType.name,"Update WorkItemType")) {
-            # Call the Rest API.
+            # Call the Rest API. _callAPi displays errors for the user and throws,
+            # if this happens half way through processing to mulitple work item types
+            # don't stop with some done and some not.
             try   {$resp = _callAPI -Url $url -method Post -body (ConvertTo-Json $body) }
             catch {
-               #Make this a non terminating error to allow whatever called us to continue if there are multiple items.
                $msg = "An Error occured trying to create the inherited version of " + $WorkItemType.name + "."
                if ($WorkItemType.psobject.Properties["ProcessTemplate"]) {
                   $msg = $msg -replace "\.$",  " in Process Template $($WorkItemType.ProcessTemplate)."
                }
-              Write-error -Activity Set-VSTeamWorkItemControl  -Category InvalidResult -Message $msg
-              return
+               Write-Warning $msg
+               return
             }
             if ($expand) {Get-VSTeamWorkItemType -ProcessTemplate $WorkItemType.ProcessTemplate -WorkItemType $WorkItemType.name -Expand $Expand}
             else         {
