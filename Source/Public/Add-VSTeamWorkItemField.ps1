@@ -24,7 +24,10 @@ function Add-VSTeamWorkItemField {
    )
    process {
       #Get the workitem type(s) we are updating. We get a system one, make it an inherited one
-      $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType
+      if ($WorkItemType.psobject.TypeNames.Contains('vsteam_lib.WorkItemType')) {
+         $wit= $WorkItemType
+      }
+      else {$wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType}
       $wit = $wit | Unlock-VsteamWorkItemType -Force:$Force
       foreach ($w in $wit) {
          $url = $w.url +"/fields?api-version=" + (_getApiVersion Processes)
@@ -32,7 +35,7 @@ function Add-VSTeamWorkItemField {
             if ($r.psobject.Properties["referenceName"]) {$r = $r.referenceName}
             $body    =  @{
                   referenceName = $r
-                  defaultValue  = $DefaultValue;
+                  defaultValue  = $DefaultValue
                   allowGroups   = $AllowGroups -as [bool]
                   required      = $Required    -as [bool]
                   readOnly      = $ReadOnly    -as [bool]
