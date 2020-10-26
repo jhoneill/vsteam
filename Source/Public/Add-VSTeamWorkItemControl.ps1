@@ -41,6 +41,7 @@ function Add-VSTeamWorkItemControl {
                throw [System.Management.Automation.ValidationMetadataException]::new("Label cannot be overriden when specifying multiple fields.")
          }
          #Allow for $field.ReferenceName being more than one name, a field object
+#to do if everything is referencename has the right type name, don't get
          $fields = Get-VSTeamField -ReferenceName $ReferenceName
          $htmlField = $fields.type -eq "html"
          if ($fields.type -ne "html" -and $htmlField) {
@@ -58,8 +59,26 @@ function Add-VSTeamWorkItemControl {
       # have an unlocked layout.page with a matching page label name (also wildcard),
       # for non-html control filter to pages with the right group.
       # And ensure we can update the Work Item type.
-      $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
+      $wit = $null
+      if ($WorkItemType.psobject.TypeNames.Contains('vsteam_lib.WorkItemType')  ) {
+         if ($WorkItemType.count -eq 1 -and $WorkItemType.psobject.Properties['layout']){
+            $wit = $WorkItemType
+         }
+         else {
+            $WorkItemType = $workItemType.name
+            $ProcessTemplate = $WorkItemType.ProcessTemplate
+         }
+      }
+      if ($PageLabel.psobject.TypeNames.contains('vsteam_lib.WorkItemPage')) {
+         $PageLabel = $PageLabel.label
+      }
+      if ($GroupLabel.psobject.TypeNames.contains('vsteam_lib.WorkItemPageGroup')) {
+         $GroupLabel = $GroupLabel.label
+      }
+      if (-not $wit) {
+         $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
                Where-Object {$_.layout.pages.where({$_.label-like $PageLabel -and -not $_.locked })}
+      }
       if (-not $htmlfield) {
          #filter to types where the unlocked matching page has the right group name in one of its sections
          $wit = $wit.Where({$_.layout.pages.where({$_.label-like $PageLabel -and -not $_.locked }).sections.groups.label -like $GroupLabel})
@@ -68,12 +87,14 @@ function Add-VSTeamWorkItemControl {
             return
          }
       }
-      $wit = $wit | Unlock-VSTeamWorkItemType -Expand layout -force:$Force
+         $wit = $wit.where({$_.layout.pages.where({
+            $_.label-like $PageLabel -and -not $_.locked -and
+            $_.sections.groups.label -like $GroupLabel
+         })}) | Unlock-VSTeamWorkItemType -Expand layout -force:$Force
       if (-not $wit) {
          Write-Warning "No WorkItem type matching '$WorkItemType' in $ProcessTemplate met the criteria to add a control."
          return
       }
-
       foreach ($w in $wit) {
          #We know $w can be modified and has required page (and group if not HTML)
          #Loop through the fields, adding if they're not already there, then through pages.

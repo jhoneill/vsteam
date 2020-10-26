@@ -12,7 +12,7 @@ function Add-VSTeamWorkItemPageGroup {
 
       [Parameter(ValueFromPipelineByPropertyName=$true)]
       [ArgumentCompleter([vsteam_lib.PageCompleter])]
-      [string]$PageLabel = 'Details',
+      $PageLabel = 'Details',
 
       [parameter(Mandatory = $true, Position=1)]
       [Alias('Name','GroupLabel')]
@@ -28,14 +28,29 @@ function Add-VSTeamWorkItemPageGroup {
    )
    process {
       #Get the workitem type(s) we are updating. If we get a system one, make it an inherited one before changing layout.
-      $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
-             Where-object {$_.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked })} |
-               Unlock-VSTeamWorkItemType -Expand layout -Force:$force
+      $wit = $null
+      if ($WorkItemType.psobject.TypeNames.Contains('vsteam_lib.WorkItemType')  ) {
+         if ($WorkItemType.count -eq 1 -and $WorkItemType.psobject.Properties['layout']){
+            $wit = $WorkItemType
+         }
+         else {
+            $WorkItemType = $workItemType.name
+            $ProcessTemplate = $WorkItemType.ProcessTemplate
+         }
+      }
+      if ($PageLabel.psobject.TypeNames.contains('vsteam_lib.WorkItemPage')) {
+         $PageLabel = $PageLabel.label
+      }
+      if (-not $wit) {
+         $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType -Expand layout |
+             Where-object {$_.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked })}
+      }
+      $wit = $wit | Unlock-VSTeamWorkItemType -Expand layout -Force:$force
+
       if (-not $wit) {
           Write-Warning "No WorkItem type matching '$WorkItemType' in $ProcessTemplate met the criteria to add a PageGroup."
          return
       }
-
       foreach ($w in $wit) {
          foreach ($page in $w.layout.pages.where({$_.label -like $PageLabel -and -not $_.locked})) {
             foreach ($l in $Label) {
@@ -43,7 +58,8 @@ function Add-VSTeamWorkItemPageGroup {
                   label  = $l
                   visible= $true
                }
-               if ($Order) {$body['order'] = $Order}
+               #zero is a valid value for order
+               if ($PSBoundParameters.ContainsKey('Order')) {$body['order'] = $Order}
                $url = $w.url + "/layout/pages/" + $page.id + "/sections/$SectionID/Groups?api-version=" + (_getApiVersion Processes)
                if ($force -or $PSCmdlet.ShouldProcess("$($page.label) page of workitem '$($w.name)'" ,"Add a layout group")){
                   #Call the REST API.
