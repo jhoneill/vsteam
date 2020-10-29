@@ -29,15 +29,15 @@ function Set-VSTeamWorkItemType {
       [switch]$Force
    )
    process {
-      #Get the existing workitem-type definition. Drop out if can't be found
       $wit = $null
-      #If $workItemtype contains an object, use it.
+      #If $workItemtype contains an object, use it. Otherwise get matching ones.
       if ($WorkItemType.psobject.TypeNames.Contains('vsteam_lib.WorkItemType')) {
          $wit = $WorkItemType
       }
       else {
          $wit = Get-VSTeamWorkItemType -ProcessTemplate $ProcessTemplate -WorkItemType $WorkItemType
       }
+      #Bail out if we found no type, or we can't change system types to inherited ones.
       $wit = $wit | Unlock-VSTeamWorkItemType -Force:$Force
       if (-not $wit) {Write-Warning "There are no suitable Workitem types to update." ; return}
       foreach ($w in $wit)   {
@@ -69,14 +69,14 @@ function Set-VSTeamWorkItemType {
          #endregion
 
          if ($Force -or $PSCmdlet.ShouldProcess($w.Name,"Modify $ProcessTemplate, to update definition of workitem type") ) {
-            #Call the REST API -
+            #Call the REST API - don't stop if one item in a long list fails.
             try   {
                $resp = _callapi -Url $url -method  Patch  -ContentType "application/json" -body (ConvertTo-Json $body) -ErrorAction stop
             }
             catch { Write-Warning "Failed to update $($w.name) in $($w.processTemplate). It may not be possible to change this type." ; continue}
 
-            # Apply a Type Name so we can use custom format view and custom type extensions and add workitemType
-            # and processTemplate properties to become a parameters when the object is piped into other functions
+            # Apply a Type Name so we can use custom format view and/or custom type extensions and
+            # add workitemType & processTemplate properties (which become a parameters when the object is piped into other functions).
             _applyTypesWorkItemType -item $resp
             Add-Member -InputObject $resp -MemberType AliasProperty -Name WorkItemType    -Value "name"
             Add-Member -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -Value $w.ProcessTemplate

@@ -18,19 +18,17 @@ Describe 'VSTeamPickList' {
       }
    }
 
-   Context 'Set-VSTeamPickList' {
+   Context 'Remove-VSTeamPickList' {
 
-      It 'should call the correct API to change a list and set the correct type on the result' {
+      It 'should call the correct API to delete a list.' {
          ## Act
-         $p = Set-VSTeamPickList -PicklistID office -RemoveOldItems -Newitems London, Dublin -Force
+         Remove-VSTeamPickList -PicklistID office -force
 
          ## Assert
          Should -Invoke _callApi -Exactly -Scope It -Times 1 -ParameterFilter {
-            $method -eq 'Put' -and
-            $body -match '"(?s)Items":\s*\[\s*"London"\s*,\s*"Dublin"\s*\]'
+            $method -eq 'DELETE' -and
+            $url -match '693feca0-3123-41ba-8501-52d4882949c8'
          }
-         $p.count | should -BeExactly 1
-         $p.psobject.TypeNames| should -contain 'vsteam_lib.PickList'
       }
 
    }

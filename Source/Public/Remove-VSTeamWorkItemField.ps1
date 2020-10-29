@@ -34,9 +34,9 @@ function Remove-VSTeamWorkItemField {
                   $null = _callAPI -Url $url -method Delete -body (ConvertTo-Json $body)
                }
                catch {
-                  $msg = "Failed to update Delete '{0}' of Workitem '1' in {2}" -f
+                  $msg = "Failed to update Delete '{0}' from Workitem type '{1}' in {2}" -f
                            $field.name, $wit.name, $ProcessTemplate
-                  Write-error -Activity Get-VSTeamWorkItemField  -Category InvalidResult -Message $msg
+                  Write-error -Activity Remove-VSTeamWorkItemField  -Category InvalidResult -Message $msg
                   continue
                }
             }

@@ -10,7 +10,7 @@ function Get-VSTeamWorkItemField {
       [ArgumentCompleter([vsteam_lib.WorkItemTypeCompleter])]
       $WorkItemType,
 
-      [parameter(ValueFromPipelineByPropertyName=$true, Position=1)]
+      [parameter(Position=1)]
       [ArgumentCompleter([vsteam_lib.FieldCompleter])]
       [vsteam_lib.FieldTransformAttribute()]
       [Alias('Name','FieldName')]
@@ -52,7 +52,7 @@ function Get-VSTeamWorkItemField {
             # and add members to make it easier if piped into something which takes values by property name
             $r.psobject.TypeNames.Insert(0,'vsteam_lib.WorkitemField')
             Add-Member -InputObject $r -MemberType NoteProperty -Name WorkItemType    -Value $w.name
-            Add-Member -InputObject $r -MemberType NoteProperty  -Name ProcessTemplate -Value $ProcessTemplate
+            Add-Member -InputObject $r -MemberType NoteProperty  -Name ProcessTemplate -value $w.processTemplate
 
             Write-Output $r
          }

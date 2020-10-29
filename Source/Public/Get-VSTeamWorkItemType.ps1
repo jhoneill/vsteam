@@ -64,6 +64,9 @@ function Get-VSTeamWorkItemType {
             $result = $resp
          }
          if ($ProjectName -eq $env:TEAM_PROJECT -and $env:TEAM_PROCESS) {$ProcessTemplate = $env:TEAM_PROCESS}
+         if ($ProcessTemplate) {
+            $result | Add-Member -MemberType NoteProperty  -Name "ProcessTemplate" -Value $ProcessTemplate
+         }
       }
       else {
          $result = @()
@@ -73,6 +76,7 @@ function Get-VSTeamWorkItemType {
             else           { $url += "/workitemtypes?api-version=" + (_getApiVersion Processes)}
             if ($Expand) { $resp = _callAPI -Url $url -QueryString @{'$expand' = ($Expand -Join ',').ToLower() }    }
             else         { $resp = _callapi -Url $url }
+            $resp.value | Add-Member -MemberType NoteProperty  -Name "ProcessTemplate" -Value $pt
             $result += $resp.value
          }
       }
@@ -84,9 +88,6 @@ function Get-VSTeamWorkItemType {
       foreach ($item in $result) {
          _applyTypesWorkItemType -item $item
          Add-Member    -InputObject $item -MemberType AliasProperty -Name "WorkItemType"    -Value "name"
-         if ($ProcessTemplate) {
-            Add-Member -InputObject $item -MemberType NoteProperty  -Name "ProcessTemplate" -Value $ProcessTemplate
-         }
       }
       #Allow the $WorkItemType to contain wild cards AND multiple items, by converting to regex
       $regex = "^" + ($WorkItemType -replace '\*','.*' -replace '\?','.' -join '$|^') + '$'
