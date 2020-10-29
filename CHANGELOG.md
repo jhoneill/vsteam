@@ -1,11 +1,12 @@
 # Changelog
-#J.H. O'Neill @ 20th October 2020
+#J.H. O'Neill @ 29th October 2020
 1.   ** Added classes** to support tab completion of WorkItem \[layout\]  pages and pagegroups
       * `PageCompleter`       in Source/Classes/Completer/PageCompleter.cs
       * `PageGroupCompleter`  in Source/Classes/Completer/PageGroupCompleter.cs
-2.   **Added Functions**  `Add-VsteamWorkItemPage`  ,   `Get-VsteamWorkItemPage`, `Remove-VsteamWorkItemPage, `Set-VsteamWorkItemPage` to work with the pages in WorkItem Layouts
-3.   **Added Functions**  `Add-VsteamWorkItemPageGroup`, `Remove-VsteamWorkItemPageGroup`, `Set-VsteamWorkItemPageGroup` to work with groups of controls on these pages.
-4    **Added Functions**  `Add-VsteamWorkItemControl`, `Remove-VsteamWorkItemControl`  `Set-VsteamWorkItemControl` to work with the controls.
+2.   **Changed class**  `WorkItemTypeCompleter` to use the WorkItemTypeCache if unless -ProcessTemplate is specifies a non-default process, when it will query for that Process's work item types.
+3.   **Added Functions**  `Add-VsteamWorkItemPage`  ,   `Get-VsteamWorkItemPage`, `Remove-VsteamWorkItemPage, `Set-VsteamWorkItemPage` to work with the pages in WorkItem Layouts
+4.   **Added Functions**  `Add-VsteamWorkItemPageGroup`, `Remove-VsteamWorkItemPageGroup`, `Set-VsteamWorkItemPageGroup` to work with groups of controls on these pages.
+5.   **Added Functions**  `Add-VsteamWorkItemControl`, `Remove-VsteamWorkItemControl`  `Set-VsteamWorkItemControl` to work with the controls - these require the field commands in the #370 below.
 
 # Changelog
 ## J.H. O'Neill @ 15th October 2020 (#370)
@@ -20,7 +21,7 @@
 3.  **Added functions** `Get-VSTeamField`         and `Add-VSTeamField`         to list global fields which can be used in (2) and define new ones.
 4.  **Added functions** `Get-VSTeamPickList`,         `Add-VSTeamPickList` and `Set-VSTeamPickList` to list and modify picklists used in the fields in (3) and define new ones
 5.  **Changed functions** `Set-VSTeamAccount` and `Set-VSTeamDefaultProject` to clear caches when connecting.
-
+6.  **Changed Class**    `Source/Classes/Cache/ProcessTemplateCache` to allow time out to be configurable
 ## 7.2.0
 
 1. To support tab completion for (e.g.) icon color  in `Add-VSTeamWorkItemType`: **added class** `ColorCompleter` in file `Source\Classes\Completer\ColorCompleter.cs`. I can't find way to use the conventional `KnownColor` class in single new C# class which will build for both Windows PowerShell 5 and PowerShell Core, so I've worked round it by getting the static properties of `System.Drawing.Color`.
