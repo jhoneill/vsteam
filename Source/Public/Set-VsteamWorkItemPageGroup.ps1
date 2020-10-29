@@ -136,8 +136,8 @@ function Set-VSTeamWorkItemPageGroup {
                Add-Member  -InputObject $resp -MemberType AliasProperty -Name GroupLabel      -Value Label
                Add-Member  -InputObject $resp -MemberType NoteProperty  -Name SectionId       -Value $NewSectionID
                Add-Member  -InputObject $resp -MemberType NoteProperty  -Name PageLabel       -Value $Destination.label
-               Add-Member  -InputObject $resp -MemberType NoteProperty  -Name WorkItemType    -Value $WorkItemType
-               Add-Member  -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -Value $ProcessTemplate
+               Add-Member  -InputObject $resp -MemberType NoteProperty  -Name WorkItemType    -Value $w.name
+               Add-Member  -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -value $w.processTemplate
 
                return $resp
             }

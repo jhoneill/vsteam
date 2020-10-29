@@ -7,8 +7,8 @@
 
 
 ## DESCRIPTION
-Each type of WorkItem specifies a multipage layout. Each page contains contain controls for working with the WorkItem's data fields. This command adds those controls which are oganized into groups, and the group are place in 3 sections.   
-When adding an HTML field, it's control gets it's own group so a section, not a group, needs to be specified for these controls. 
+Each type of WorkItem specifies a multipage layout. Each page contains contain controls for working with the WorkItem's data fields. This command adds those controls which are organized into groups, and the groups are placed in 3 sections.   
+When adding an HTML field, its control gets its own group, so a section - not a group - needs to be specified for these controls. 
 If a field is specified which is not already part of the WorkItem type, it will be added. 
 Note that the built-in Process templates (Scrum, Agile etc.) do not allow their work item types to be customized, this is only allowed for custom processes. 
 
@@ -32,7 +32,7 @@ Epic         Details   Section2  Details    Office       Custom.Office FieldCont
 ```
 
 This command adds a single custom field "Office" to the Details group on the Details page for Epic workitems in the Scrum5 template.    
-"Details" is the default page name and the default group name, so in the case the values did not need to given explicitly.  
+"Details" is the default page name and the default group name, so in the case the values did not need to be given explicitly.  
 Note that because there are two actions, adding the data-field to the WorkItem type, and then adding the control to the layout, there can be multiple confirmation prompts if -Force is not specified. 
 
 ### Example 2
@@ -46,7 +46,7 @@ Epic         Details   Section1  grp_Steps  False          True             Step
 
 ```
 
-In this case -Force has been used to supress the confirmation prompts and no group or section has been specified. Here the field name specified, "Steps", is an HTML fieldm so the command creates and returns a group name grp_Steps containing a control for the Steps field. This group has been placed in the default section, "Section1", of the default page "Details". 
+In this case -Force has been used to suppress the confirmation prompts and no group or section has been specified. Here the field name specified, "Steps", is an HTML field, so the command creates and returns a group name grp_Steps containing a control for the Steps field. This group has been placed in the default section, "Section1", of the default page "Details". 
 
 ### Example 3
 ```powershell
@@ -62,7 +62,7 @@ Bug          ReportInformation Section1  Environment Office        Custom.Office
 Bug          ReportInformation Section1  Environment Ready         Custom.Ready    FieldControl  True   
 ```
 
-The examples for Add-VSTeamWorkItemPageGroup include a command to createdPageGroups on custom pages in the "Bug" workitem type in three process templates, and left the results in $Groups.     
+The examples for Add-VSTeamWorkItemPageGroup include a command to create PageGroups on custom pages in the "Bug" workitem type in three process templates, and left the results in $Groups.     
 Here $Groups is piped into Add-VSTeamWorkItemControl, which is passed multiple fields ("Custom.Office", and "Custom.Ready") as a parameter (using the alias "Field") and the -Force switch.    
 This adds each of the fields to each of the groups; the six lines above are 3 pairs, one for each of the groups.  
 The two steps could have been combined into a single pipeline:     
@@ -76,7 +76,7 @@ Add-VSTeamWorkItemControl -Field $fields -force
 <!-- #include "./params/forcegroup.md" -->
 
 ### -GroupLabel
-The Label of the group to contain non-HTML controls. If no group is specified the command will attempt to use the "Details" group. If a group is specified with HTML controls, the command will report an error. You can specify a wildcard for the group, provided that it only matches one group each selected page. 
+The label of the group to contain non-HTML controls. If no group is specified, the command will attempt to use the "Details" group. If a group is specified with HTML controls, the command will report an error. You can specify a wildcard for the group, provided that it only matches one group on any selected page. 
 
 ```yaml
 Type: String
@@ -91,7 +91,7 @@ Accept wildcard characters: False
 ```
 
 ### -Hide
-If specified, the control(s) will be set to not visible. By default newly added controls can be seen. 
+If specified, the control(s) will be set to not visible. By default, newly added controls can be seen. 
 
 ```yaml
 Type: SwitchParameter
@@ -121,7 +121,7 @@ Accept wildcard characters: False
 ```
 
 ### -Order
-For a non HTML control this is the position of the control in its group. HTML controls are have their own groups, and this is position the group in its section. 
+For a non-HTML control this is the position of the control in its group. HTML controls have their own groups, and this is position the group in its section. 
 
 ```yaml
 Type: Int32
@@ -136,7 +136,7 @@ Accept wildcard characters: False
 ```
 
 ### -PageLabel
-The page where the control(s) should be placed. If no page is specified the default "Details" page will be used. Wildcards can be used, and multiple pages match the contol(s) will be placed on each one, provided that there are suitable groups to place non-html controls.
+The page where the control(s) should be placed. If no page is specified, the default "Details" page will be used. Wildcards can be used, and if multiple pages match the control(s) will be placed on each one, provided that there are suitable groups to place non-html controls.
 
 ```yaml
 Type: String

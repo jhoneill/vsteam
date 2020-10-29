@@ -24,7 +24,7 @@ WARNING: An error occurred: Response status code does not indicate success: 403 
 WARNING: VS402356: You do not have the permissions required to perform the attempted operation on this process.
 ```
 
-The user was prompted for confirmation, because the -Force switch was not used, and an error occured because the current project is using one of the built-in process templates which cannnot be modified.
+The user was prompted for confirmation, because the -Force switch was not used, and an error occurred because the current project is using one of the built-in process templates which cannot be modified.
 
 
 ### Example 2
@@ -37,7 +37,7 @@ WorkItemType PageLabel Page Type Locked Visble Inherited Groups
 Task         Progress  custom           True
 ```
 
-This time the command has been run with the -Force switch to remove the need for confirmation, and has specified a template where modifications are allowed.
+This time the command has been run with the -Force switch to remove the need for confirmation and has specified a template where modifications are allowed.
 
 ### Example 3
 ```powershell
@@ -74,7 +74,7 @@ This example shows the command supporting multiple WorkItems, and multiple new p
 <!-- #include "./params/forcegroup.md" -->
 
 ### -Label
-The name of new page. To be consitent with commands, the aliases "Name" or "PageLabel" can be used. If the page already exists, an error will occur.
+The name of new page. To be consistent with other commands, the aliases "Name" or "PageLabel" can be used. If the page already exists, an error will occur.
 
 ```yaml
 Type: Object
@@ -104,7 +104,7 @@ Accept wildcard characters: False
 ```
 
 ### -PageType
-A page of controls use the type custom and this is the default. Page types are defined for Attachments, History and Links.
+A page of controls uses the type "custom" and this is the default. Page types are defined for Attachments, History and Links.
 
 ```yaml
 Type: String

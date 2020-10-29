@@ -7,7 +7,7 @@
 
 
 ## DESCRIPTION
-Each type of WorkItem specifies a multipage layout. Pages may be added and customized, although some of the built-in pages are fixed, and some controls cannot be removed (only hidden.) Each page divides into sections, the sections contain groups and the groups contain controls for working with the WorkItem's data fields.
+Each type of WorkItem specifies a multipage layout. Pages may be added and customized, although some of the built-in pages are fixed, and some controls cannot be removed (only hidden.) Each page divides into sections, the sections contain groups, and the groups contain controls for working with the WorkItem's data fields.
 
 ## EXAMPLES
 
@@ -46,7 +46,7 @@ Feature      Links       links       True   True   True      Links
 Feature      Attachments attachments True   True   True      Attachments
 ```
 
-This command compares the pages for Bugs and features. Both have the same pages; Details is only unlocked page, and has different groups for each WorkItem type.
+This command compares the pages displayed for Bugs and Features. Both have the same page names; Details is only unlocked page and has different groups for each WorkItem type.
 
 
 ### Example 3
@@ -84,15 +84,15 @@ Scrum5          Bug          Links         True
 Scrum5          Bug          Attachments   True
 ```
 
-Here the first command in the Pipeline gets a list of process templates, returning the built-in Scrum and a custom template named "Scrum5";
-these are piped into VSTeamWorkItemPage to get a list of pages for each, which are displayed using Format-Table.
-Note the custom template has a custom page, and some fields (including) "locked" are not given a value for custom pages.
+Here the first command in the Pipeline gets a list of Process Templates, returning the built-in "Scrum" and a custom template named "Scrum5";
+these are piped into Get-VSTeamWorkItemPage to get a list of pages for Bug WorkItems in each template, which are displayed using Format-Table.
+Note that in custom template a custom page has been added, and some fields (including) "locked" are not given a value for custom pages.
 
 
 ## PARAMETERS
 
 ### -Label
-The Page label to select one or more pages. If none is specified all pages are returned
+The Page label to select one or more pages. If none is specified all pages are returned.
 
 ```yaml
 Type: String
@@ -108,7 +108,7 @@ Accept wildcard characters: False
 
 ### -ProcessTemplate
 
-The process template containing the work item(s) of interest. If not specified this defaults to the Process for the current Project
+The process template containing the work item(s) of interest. If not specified this defaults to the process for the current project.
 
 
 ```yaml

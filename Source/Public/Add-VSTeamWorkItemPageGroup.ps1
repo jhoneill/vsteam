@@ -80,7 +80,7 @@ function Add-VSTeamWorkItemPageGroup {
                   Add-Member  -InputObject $resp -MemberType NoteProperty  -Name SectionID       -Value $SectionID
                   Add-Member  -InputObject $resp -MemberType NoteProperty  -Name PageLabel       -Value $page.label
                   Add-Member  -InputObject $resp -MemberType NoteProperty  -Name WorkItemType    -Value $w.name
-                  Add-Member  -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -Value $ProcessTemplate
+                  Add-Member  -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -value $w.processTemplate
 
                   Write-Output $resp
                }

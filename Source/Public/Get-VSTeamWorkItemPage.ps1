@@ -55,7 +55,7 @@ function Get-VSTeamWorkItemPage {
                      Add-Member -InputObject $g -Name GroupLabel      -MemberType AliasProperty -Value Label
                      Add-Member -InputObject $g -Name SectionID       -MemberType NoteProperty  -Value $s.id
                      Add-Member -InputObject $g -Name PageLabel       -MemberType NoteProperty  -Value $p.label
-                     Add-Member -InputObject $g -Name ProcessTemplate -MemberType NoteProperty  -Value $ProcessTemplate
+                     Add-Member -InputObject $g -Name ProcessTemplate -MemberType NoteProperty  -value $w.processTemplate
                      Add-Member -InputObject $g -Name WorkItemType    -MemberType NoteProperty  -Value $w.name
                      foreach ($c in $g.controls)  {
                         $c.psobject.TypeNames.Insert(0,'vsteam_lib.WorkItemControl');
@@ -63,7 +63,7 @@ function Get-VSTeamWorkItemPage {
                         Add-Member -InputObject $c -Name GroupLabel      -MemberType NoteProperty  -Value $g.Label
                         Add-Member -InputObject $c -Name SectionID       -MemberType NoteProperty  -Value $s.id
                         Add-Member -InputObject $c -Name PageLabel       -MemberType NoteProperty  -Value $p.label
-                        Add-Member -InputObject $c -Name ProcessTemplate -MemberType NoteProperty  -Value $ProcessTemplate
+                        Add-Member -InputObject $c -Name ProcessTemplate -MemberType NoteProperty  -value $w.processTemplate
                         Add-Member -InputObject $c -Name WorkItemType    -MemberType NoteProperty  -Value $w.name
                      }
                   }

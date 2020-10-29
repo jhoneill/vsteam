@@ -7,7 +7,7 @@
 
 ## DESCRIPTION
 
-Removes a control for a WorkItem data field from a WorkItem type's page layout definition; inherited controls cannot be removed (although they can be hidden), and if the control selected is an inherited one the command may respond that there are no Workitem types suitable for processing. Removing a control from the page does not delete that field as a database column for the work item type. 
+Removes a control for a data-field from a WorkItem type's page-layout definition; inherited controls cannot be removed (although they can be hidden), and if the control selected is an inherited one the command may respond that there are no WorkItem types suitable for processing. Removing a control from the page does not delete that field as a database column for the WorkItem type. 
 
 ## EXAMPLES
 
@@ -18,21 +18,21 @@ Remove-VSTeamWorkItemControl -ProcessTemplate Scrum5 -WorkItemType Epic -Page De
 WARNING: No WorkItem type matching 'Epic' in Scrum5 met the criteria to remove a control.
 ```
 
-In this example the command has tried to remove an inherited field, but couldn't find a match for WorkItem of "Epic", an unlocked page Named "Details", and a removable control labeled effort in any group. 
+In this example, the command has tried to remove an inherited field but couldn't find a match for WorkItem type of "Epic", an unlocked page Named "Details", and a removable control labeled "effort" in any group. 
 
 ### Example 2
 ```powershell
 Remove-VSTeamWorkItemControl -ProcessTemplate Scrum5 -WorkItemType Epic -Page Details  -Label Office
 ```
 
-In this example the command has found a custom field by searching in all groups on the "Details" page for Epic workItems
+In this example the command has found a custom field by searching in all groups on the "Details" page for Epic WorkItems
 
 ## PARAMETERS
 
 <!-- #include "./params/forcegroup.md" -->
 
 ### -GroupLabel
-Specifies a group to search for the the control. The group label can be a wildcard, and if no group is given all groups will be searched. 
+Specifies a group to search for the control. The group label can be a wildcard, and if no group is given all groups will be searched to find the control. 
 
 ```yaml
 Type: String
@@ -47,7 +47,7 @@ Accept wildcard characters: False
 ```
 
 ### -Label
-The display label for the control or the reference name for the data-field. This can be a wild card, provided that only one control on a page matches the combination of specified group and control label. 
+The display label for the control OR the reference name for the data-field. This can be a wild card, provided that only one control on a page matches the combination of specified group and control label. 
 
 ```yaml
 Type: String

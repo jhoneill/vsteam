@@ -41,7 +41,7 @@ function Add-VSTeamWorkItemControl {
                throw [System.Management.Automation.ValidationMetadataException]::new("Label cannot be overriden when specifying multiple fields.")
          }
          #Allow for $field.ReferenceName being more than one name, a field object
-#to do if everything is referencename has the right type name, don't get
+#to do if everything in referencename has the right type name, to be a field don't get
          $fields = Get-VSTeamField -ReferenceName $ReferenceName
          $htmlField = $fields.type -eq "html"
          if ($fields.type -ne "html" -and $htmlField) {
@@ -87,7 +87,7 @@ function Add-VSTeamWorkItemControl {
             return
          }
       }
-         $wit = $wit.where({$_.layout.pages.where({
+      $wit = $wit.where({$_.layout.pages.where({
             $_.label-like $PageLabel -and -not $_.locked -and
             $_.sections.groups.label -like $GroupLabel
          })}) | Unlock-VSTeamWorkItemType -Expand layout -force:$Force
@@ -188,7 +188,7 @@ function Add-VSTeamWorkItemControl {
                   }
                   Add-Member    -InputObject $resp -Name PageLabel       -MemberType NoteProperty  -Value $page.label
                   Add-Member    -InputObject $resp -Name WorkItemType    -MemberType NoteProperty  -Value $w.name
-                  Add-Member    -InputObject $resp -Name ProcessTemplate -MemberType NoteProperty  -Value $ProcessTemplate
+                  Add-Member    -InputObject $resp -Name ProcessTemplate -MemberType NoteProperty  -Value $w.ProcessTemplate
 
                   Write-Output $resp
                }

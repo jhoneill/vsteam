@@ -6,7 +6,7 @@
 <!-- #include "./synopsis/Remove-VSTeamWorkItemPageGroup.md" -->
 
 ## DESCRIPTION
-This command removes custom groups from page layouts of WorkItem types. If the group specified is an inherited group then the command will not attempt to process it, so may respond that there are no Workitem types suitable for processing. If the group contains controls, they will be deleted. 
+This command removes custom groups from page layouts of WorkItem types. If the group specified is an inherited group then the command will not attempt to process it, and may respond that there are no Workitem types suitable for processing. If the group contains controls, they will be deleted. 
 
 
 ## EXAMPLES
@@ -23,7 +23,7 @@ Removes a group named Environment from any page on the Bug WorkItemType in the S
 <!-- #include "./params/forcegroup.md" -->
 
 ### -Label
-The name of the group to be removed. This may be a wildcard, but for safety it will only remove one group form any page. If the same group once on each of multiple pages, each will be removed. 
+The name of the group to be removed. This may be a wildcard, but for safety it will only remove one wildcard match on any page. If the same label matches once on each of multiple pages, each one will be removed. 
 
 ```yaml
 Type: String
@@ -38,7 +38,7 @@ Accept wildcard characters: False
 ```
 
 ### -PageLabel
-The label for the page holidng the group, and if the group is found on more than one page of the same workitem type it will be removed. 
+The label for the page holding the group. This can be a wildcard, and if the group label is found on more than one page of the same WorkItem type it will be removed from each page. 
 
 ```yaml
 Type: String

@@ -63,7 +63,7 @@ function Set-VSTeamWorkItemPage {
                $resp.psobject.TypeNames.Insert(0,'vsteam_lib.Workitempage')
                Add-Member -InputObject $resp -MemberType AliasProperty -Name PageLabel       -Value 'label'
                Add-Member -InputObject $resp -MemberType NoteProperty  -Name WorkItemType    -Value $w.name
-               Add-Member -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -Value $ProcessTemplate
+               Add-Member -InputObject $resp -MemberType NoteProperty  -Name ProcessTemplate -value $w.processTemplate
 
                Write-Output $resp
             }

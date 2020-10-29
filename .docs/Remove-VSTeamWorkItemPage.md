@@ -7,7 +7,7 @@
 
 
 ## DESCRIPTION
-This command removes pages from the layouts of WorkItem types. Built-in (inherited) pages cannot be removed, and if one is specified the command may report that there are are no workitem types suitable to process. Any groups and controls contained on the page will be deleted; to keep groups Set-VSTeamWorkItemPageGroup can be used to move it to a different page before deleting the page it was on.  
+This command removes pages from the layouts of WorkItem types. Built-in (inherited) pages cannot be removed, and if one is specified the command may report that there are no suitable WorkItem types to process. Any groups and controls contained on the page will be deleted; Set-VSTeamWorkItemPageGroup can be used to move a group to a different page before deleting the page it was on.  
 
 ## EXAMPLES
 
@@ -15,7 +15,7 @@ This command removes pages from the layouts of WorkItem types. Built-in (inherit
 ```powershell
 Remove-VSTeamWorkItemPage -ProcessTemplate scrum5  -WorkItemType Feature -PageLabel Costings
 ```
-Removes the "costings" page from features in the the Scrum5 Process template. This will prompt the user for confirmation
+Removes the "costings" page from features in the Scrum5 Process template. This will prompt the user for confirmation
 
 
 ### Example 2

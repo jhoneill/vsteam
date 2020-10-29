@@ -160,7 +160,7 @@ function Set-VSTeamWorkItemControl {
             Add-Member -InputObject $resp -Name ControlLabel    -MemberType AliasProperty -Value Label
             Add-Member -InputObject $resp -Name PageLabel       -MemberType NoteProperty  -Value $page.label
             Add-Member -InputObject $resp -Name WorkItemType    -MemberType NoteProperty  -Value $w.name
-            Add-Member -InputObject $resp -Name ProcessTemplate -MemberType NoteProperty  -Value $ProcessTemplate
+            Add-Member -InputObject $resp -Name ProcessTemplate -MemberType NoteProperty  -Value $w.ProcessTemplate
 
             return $resp
 

@@ -24,7 +24,7 @@ WARNING: An error occurred: Response status code does not indicate success: 403 
 WARNING: VS402356: You do not have the permissions required to perform the attempted operation on this process.
 ```
 
-The user was prompted for confirmation, because the -Force switch was not used, and an error occured because the current project is using one of the built-in process templates which cannnot be modified.
+The user was prompted for confirmation, because the -Force switch was not used, and an error occurred because the current project is using one of the built-in process templates which cannot be modified.
 
 ### Example 2
 ```powershell
@@ -35,7 +35,7 @@ WorkItemType PageLabel SectionID GroupLabel isContribution Visble Inherited Cont
 ------------ --------- --------- ---------- -------------- ------ --------- --------
 Task         Details   Section1  Followup   False          True
 ```
-This time the command has been run with the -Force switch to remove the need for confirmation, and has specified a template where modifications are allowed.
+This time the command has been run with the -Force switch to remove the need for confirmation and has specified a template where modifications are allowed.
 
 ### Example 3
 ```powershell
@@ -48,7 +48,7 @@ Bug          ReportInformation Section1  Environment False          True
 Bug          ReportInformation Section1  Environment False          True
 ```
 
-This shows items being piped into the command, and uses an example from the Add-VSTeamWorkItemPage help.    
+This shows items being piped into the command and uses an example from the Add-VSTeamWorkItemPage help.    
 First Get-VSTeamProcess finds the processes which match Scrum? ("Scrum3","Scrum4", and "Scrum5" but not "Scrum"), then the processes are piped into Add-VSTeamWorkItemPage, which cretes a new page on the layout of the "Bug" workitem type. Then pages a priped into Add-VSTeamWorkItemPageGroup which creates a group named environment on each one.    
 Both the Add- commands have the -Force switch to prevent confirmation prompts and Add-VSTeamWorkItemPageGroup stores the result in $groups so that it can be used in other commands, like Add-VSTeamWorkItemControl.
 
@@ -58,7 +58,7 @@ Both the Add- commands have the -Force switch to prevent confirmation prompts an
 <!-- #include "./params/forcegroup.md" -->
 
 ### -Label
-Label for the new group 
+The label to display for the new group.
 
 ```yaml
 Type: Object
